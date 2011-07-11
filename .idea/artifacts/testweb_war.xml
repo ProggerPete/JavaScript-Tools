@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="testweb:war">
-    <output-path>$PROJECT_DIR$/DependencyManager/testweb/target</output-path>
-    <root id="archive" name="testweb-1.0.0-SNAPSHOT.war">
-      <element id="artifact" artifact-name="testweb:war exploded" />
-    </root>
-  </artifact>
-</component>
