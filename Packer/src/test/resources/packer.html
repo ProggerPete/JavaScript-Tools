@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Style-Type" content="text/css">
+		<meta http-equiv="Content-Script-Type" content="text/javascript">
+		<!--<script type="text/javascript" src="../../main/resources/base2-dom-fp.js"></script>-->
+		<!--<script type="text/javascript" src="../../main/resources/Packer.js"></script>-->
+		<!--<script type="text/javascript" src="../../main/resources/Words.js"></script>-->
+		<script>
+			(function (){alert('hello world');})();
+
+			document.write(function(p, a, c, k, e, d) {
+	e = function(c) {
+		return c
+	};
+	if (!''.replace(/^/, String)) {
+		while (c--) {
+			d[c] = k[c] || c
+		}
+		k = [function(e) {
+			return d[e]
+		}];
+		e = function() {
+			return'\\w+'
+		};
+		c = 1
+	}
+	;
+	while (c--) {
+		if (k[c]) {
+			p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c])
+		}
+	}
+	return p
+}('2 0(){1(\'0 3\')}()', 4, 4, 'hello|alert|function|world'.split('|'), 0, {}))
+		</script>
+		<title></title>
+		<style type="text/css"></style>
+		<script type="text/javascript"></script>
+	</head>
+	<body>
+		Hello
+	</body>
+</html>

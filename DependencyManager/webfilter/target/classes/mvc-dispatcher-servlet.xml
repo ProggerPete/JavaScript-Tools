@@ -1,0 +1,52 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<context:component-scan base-package="net.dynamic_tools.jsdependency" />
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsResourceViews/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+	<bean id="propertyConfigurer"
+		  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:jsResources.properties"/>
+
+	</bean>
+
+	<bean id="jsResourceDependencyManager" class="net.dynamic_tools.service.ResourceDependencyManagerImpl"/>
+
+	<bean id="fileFinder" class="net.dynamic_tools.service.FileFinder"/>
+
+	<bean id="jsDependencyReader" class="net.dynamic_tools.service.JSDependencyReader">
+		<property name="pattern" value="// *import *([^ ]+)$" />
+	</bean>
+
+	<bean id="jsResourceLoader" class="net.dynamic_tools.service.JSResourceLoader">
+		<property name="fileFinder" ref="fileFinder"/>
+		<property name="jsDependencyReader" ref="jsDependencyReader"/>
+	</bean>
+
+	<bean id="jsDependencyInitialiser" class="net.dynamic_tools.service.JSDependencyInitialiser"
+		  init-method="initialiseDependencies">
+		<property name="paths">
+			<list>
+				<value>js</value>
+			</list>
+		</property>
+		<property name="jsResourceLoader" ref="jsResourceLoader"/>
+		<property name="resourceDependencyManager" ref="jsResourceDependencyManager"/>
+	</bean>
+
+	<bean id="jsResourceScriptTagCombiner" class="net.dynamic_tools.service.combiner.JSResourceScriptTagCombiner">
+		<property name="jsPath" value="js" />
+	</bean>
+
+	<bean id="jsResourceConcatenatingCombiner" class="net.dynamic_tools.service.combiner.JSResourceConcatenatingCombiner" />
+
+</beans>
