@@ -40,8 +40,17 @@ public class PackageMojo extends AbstractJavaScriptMojo {
 		getLog().info("Executing PackageMojo");
 
 		getLog().info("Creating javascript artifact");
-		File javascriptSourceDirectory = new File(project.getBasedir(), javaScriptDirectory);
-		createJavaScriptArchive(javascriptSourceDirectory);
+
+        File archiveDirectory = getCleanTargetDirectory(finalName);
+
+        copyProjectFiles(new File(archiveDirectory, "javascript"));
+
+        // The maven resources phase will place all resources in the classes directory.
+        File classesDirectory = getTargetDirectory("classes");
+        classesDirectory.mkdirs();
+        copyDirectoryStructure(new File(archiveDirectory, "resources"), classesDirectory);
+
+		createJavaScriptArchive(archiveDirectory);
 
 		getLog().info("Finished PackageMojo");
     }

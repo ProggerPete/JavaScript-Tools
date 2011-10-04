@@ -8,10 +8,7 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,6 +43,12 @@ public class ResourceDependencyManagerImpl<RESOURCE extends NamedResource> imple
         globalDependencyListIsOutOfDate = true;
     }
 
+	/**
+	 * Specify a dependy
+	 *
+	 * @param resource the resource that has the dependency
+	 * @param dependency the dependency resource
+	 */
     public void addDependency(RESOURCE resource, RESOURCE dependency) {
         if (!this.contains(resource)) {
             this.addResource(resource);
@@ -63,29 +66,65 @@ public class ResourceDependencyManagerImpl<RESOURCE extends NamedResource> imple
         return resourceMap.get(name);
     }
 
-    public List<RESOURCE> getResourcesFor(String name) {
-        RESOURCE startResource = getResourceByName(name);
-        return getResourcesFor(startResource);
+	public List<RESOURCE> getResourcesFor(String... names) {
+		List<RESOURCE> resources = new ArrayList<RESOURCE>();
+		for (String name : names) {
+			resources.add(getResourceByName(name));
+		}
+        return getResourcesFor(resources);
     }
 
-    public List<RESOURCE> getResourcesFor(RESOURCE resource) {
+	@Override
+	public List<RESOURCE> getResourcesFor(RESOURCE namedResource) {
+		return getResourcesFor(Arrays.asList(namedResource));
+	}
+
+	public List<RESOURCE> getResourcesFor(List<RESOURCE> resources) {
 
         if (globalDependencyListIsOutOfDate) {
             this.rebuildOrderedDependencyList();
         }
 
-        List<RESOURCE> resourceList = new ArrayList<RESOURCE>();
-
-        BreadthFirstIterator<RESOURCE, DefaultEdge> orderIterator = new BreadthFirstIterator<RESOURCE, DefaultEdge>(edgeReversedGraph, resource);
-        while (orderIterator.hasNext()) {
-            resourceList.add(orderIterator.next());
-        }
+		List<RESOURCE> resourceStartPoints = simplifyResourceList(resources);
+		Set<RESOURCE> resourceSet = new HashSet<RESOURCE>(resourceStartPoints);
+		for (RESOURCE resource : resourceStartPoints) {
+			BreadthFirstIterator<RESOURCE, DefaultEdge> orderIterator = new BreadthFirstIterator<RESOURCE, DefaultEdge>(edgeReversedGraph, resource);
+			while (orderIterator.hasNext()) {
+				resourceSet.add(orderIterator.next());
+			}
+		}
 
         List<RESOURCE> orderedDependencyList = new ArrayList<RESOURCE>(globalOrderedDependencyList);
-        orderedDependencyList.retainAll(resourceList);
+        orderedDependencyList.retainAll(resourceSet);
 
         return orderedDependencyList;
     }
+
+	/**
+	 * Return a filtered list of resources, removing resources that are depended on by other resources.
+	 *
+	 * @param resources the resources to simplify
+	 * @return the filtered list of resources
+	 */
+	private List<RESOURCE> simplifyResourceList(List<RESOURCE> resources) {
+		List<RESOURCE> resourceList = new ArrayList<RESOURCE>();
+
+		for (int i = 0; i < resources.size(); i++) {
+			boolean isDependedOn = false;
+			RESOURCE resourceOne = resources.get(i);
+			for (int j = i+1; j < resources.size(); j++) {
+				RESOURCE resourceTwo = resources.get(j);
+				if (resourceTwo.isDependentOn(resourceOne)) {
+					isDependedOn = true;
+					break;
+				}
+			}
+			if (!isDependedOn) {
+				resourceList.add(resourceOne);
+			}
+		}
+		return resourceList;
+	}
 
 	public List<RESOURCE> getAllResources() {
 		if (globalDependencyListIsOutOfDate) {

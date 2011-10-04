@@ -25,30 +25,30 @@ public class JSDependencyInitialiser {
 	@Autowired
 	ResourceDependencyManager<JSResource> resourceDependencyManager;
 
-	private File[] files;
+	private File[] paths;
 
 	@Value("${jsResources.path}")
 	public void setPaths(Resource... springResources) throws IOException {
-		files = new File[springResources.length];
-		for (int i=0; i < files.length; i++) {
-			files[i] = springResources[i].getFile();
+		paths = new File[springResources.length];
+		for (int i=0; i < paths.length; i++) {
+			paths[i] = springResources[i].getFile();
 		}
 	}
 
 	public void setPaths(File... paths) {
-		files = paths;
+		this.paths = paths;
 	}
 
 //	public void setPaths(String... jsPaths) throws IOException {
-//		files = new File[jsPaths.length];
-//		for (int i=0; i < files.length; i++) {
-//			files[i] = new File(jsPaths[i]);
+//		paths = new File[jsPaths.length];
+//		for (int i=0; i < paths.length; i++) {
+//			paths[i] = new File(jsPaths[i]);
 //		}
 //	}
 
 	@PostConstruct
 	public void initialiseDependencies() throws IOException {
-		jsResourceLoader.loadResourcesFromPaths(resourceDependencyManager, files);
+		jsResourceLoader.loadResourcesFromPaths(resourceDependencyManager, paths);
 	}
 
 	public void setResourceDependencyManager(ResourceDependencyManager<JSResource> resourceDependencyManager) {

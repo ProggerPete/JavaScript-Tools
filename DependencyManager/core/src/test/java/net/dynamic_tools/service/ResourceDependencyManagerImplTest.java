@@ -30,13 +30,15 @@ public class ResourceDependencyManagerImplTest {
         NamedResource d = new NamedResource("d");
         NamedResource e = new NamedResource("e");
         NamedResource f = new NamedResource("f");
+        NamedResource g = new NamedResource("g");
 
-        resourceDependencyManager.addResource(a);
-        resourceDependencyManager.addResource(b);
-        resourceDependencyManager.addResource(c);
-        resourceDependencyManager.addResource(d);
-        resourceDependencyManager.addResource(e);
-        resourceDependencyManager.addResource(f);
+//        resourceDependencyManager.addResource(a);
+//        resourceDependencyManager.addResource(b);
+//        resourceDependencyManager.addResource(c);
+//        resourceDependencyManager.addResource(d);
+//        resourceDependencyManager.addResource(e);
+//        resourceDependencyManager.addResource(f);
+//        resourceDependencyManager.addResource(g);
 
         resourceDependencyManager.addDependency(a, b);
         resourceDependencyManager.addDependency(a, d);
@@ -45,6 +47,7 @@ public class ResourceDependencyManagerImplTest {
         resourceDependencyManager.addDependency(c, d);
         resourceDependencyManager.addDependency(c, f);
         resourceDependencyManager.addDependency(d, f);
+        resourceDependencyManager.addDependency(g, e);
     }
 
     @Test
@@ -63,23 +66,52 @@ public class ResourceDependencyManagerImplTest {
     }
 
 	@Test
+    public void multipleStartPoints() {
+        List<NamedResource> resources = resourceDependencyManager.getResourcesFor("d", "g");
+        assertEquals(4, resources.size());
+        assertEither(resources.get(0).getName(), "f", "e");
+        assertEither(resources.get(1).getName(), "f", "e", "g", "d");
+        assertEither(resources.get(2).getName(), "f", "e", "g", "d");
+        assertEither(resources.get(3).getName(), "g", "d");
+
+		resources = resourceDependencyManager.getResourcesFor("b", "g");
+        assertEquals(6, resources.size());
+        assertEither(resources.get(0).getName(), "f", "e");
+        assertEither(resources.get(1).getName(), "f", "e", "g", "d");
+        assertEither(resources.get(5).getName(), "g", "b");
+    }
+
+	@Test
     public void getAllResources() {
         List<NamedResource> resources = resourceDependencyManager.getAllResources();
-        assertEquals(6, resources.size());
-        assertTrue(resources.get(0).getName().equals("e") || resources.get(0).getName().equals("f"));
-        assertTrue(resources.get(1).getName().equals("e") || resources.get(1).getName().equals("f"));
-        assertEquals("d", resources.get(2).getName());
-        assertEquals("c", resources.get(3).getName());
-        assertEquals("b", resources.get(4).getName());
-        assertEquals("a", resources.get(5).getName());
+        assertEquals(7, resources.size());
+
+        assertEither(resources.get(0).getName(), "e", "f");
+        assertEither(resources.get(1).getName(), "e", "f");
+        assertEither(resources.get(2).getName(), "g", "d");
+        assertEither(resources.get(3).getName(), "g", "d", "c");
+        assertEither(resources.get(4).getName(), "g", "c", "b");
+        assertEither(resources.get(5).getName(), "g", "b", "a");
+        assertEither(resources.get(6).getName(), "g", "a");
+	}
+
+	private void assertEither(Object actualValue, Object... options) {
+		boolean hasMatch = false;
+		String message = "Expected " + actualValue + " to be ";
+		for (Object option : options) {
+			hasMatch = hasMatch || actualValue.equals(option);
+			message += option + " or ";
+		}
+		message = message.substring(0, message.length() -4);
+		assertTrue(message, hasMatch);
 	}
 
     @Test
     public void multiplePathsToDependency() {
         List<NamedResource> resources = resourceDependencyManager.getResourcesFor("a");
         assertEquals(6, resources.size());
-        assertTrue(resources.get(0).getName().equals("e") || resources.get(0).getName().equals("f"));
-        assertTrue(resources.get(1).getName().equals("e") || resources.get(1).getName().equals("f"));
+        assertEither(resources.get(0).getName(), "e", "f");
+        assertEither(resources.get(1).getName(), "e", "f");
         assertEquals("d", resources.get(2).getName());
         assertEquals("c", resources.get(3).getName());
         assertEquals("b", resources.get(4).getName());
@@ -87,8 +119,8 @@ public class ResourceDependencyManagerImplTest {
 
         resources = resourceDependencyManager.getResourcesFor("b");
         assertEquals(5, resources.size());
-        assertTrue(resources.get(0).getName().equals("e") || resources.get(0).getName().equals("f"));
-        assertTrue(resources.get(1).getName().equals("e") || resources.get(1).getName().equals("f"));
+        assertEither(resources.get(0).getName(), "e", "f");
+        assertEither(resources.get(1).getName(), "e", "f");
         assertEquals("d", resources.get(2).getName());
         assertEquals("c", resources.get(3).getName());
         assertEquals("b", resources.get(4).getName());

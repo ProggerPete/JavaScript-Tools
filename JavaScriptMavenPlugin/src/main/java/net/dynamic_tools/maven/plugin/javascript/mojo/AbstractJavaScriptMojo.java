@@ -31,6 +31,15 @@ public abstract class AbstractJavaScriptMojo extends AbstractMojo {
 	protected MavenProject project;
 
 	/**
+	 * The maven project.
+	 *
+	 * @parameter expression="${skipTests}" default-value="false"
+	 * @required
+	 * @readonly
+	 */
+	protected boolean skipTests;
+
+	/**
      * @component
      */
     protected MavenProjectHelper mavenProjectHelper;
@@ -57,6 +66,20 @@ public abstract class AbstractJavaScriptMojo extends AbstractMojo {
 	protected String javaScriptDirectory;
 
 	/**
+	 * The JavaScript dependency folder
+	 *
+	 * @parameter expression="${package.jsRunTimeDependencyOutputDirectory}" default-value="javaScriptDependencies/runtime"
+	 */
+	protected String javaScriptRunTimeDependencyDirectory;
+
+	/**
+	 * The JavaScript dependency folder
+	 *
+	 * @parameter expression="${package.jsTestDependencyOutputDirectory}" default-value="javaScriptDependencies/test"
+	 */
+	protected String javaScriptTestDependencyDirectory;
+
+	/**
 	 * @parameter
 	 */
 	protected File manifest;
@@ -74,21 +97,6 @@ public abstract class AbstractJavaScriptMojo extends AbstractMojo {
 	 */
 	private JavaScriptArtifactManager javaScriptArtifactManager;
 
-	protected File getTargetDirectory(String directoryName) throws MojoExecutionException {
-		File targetDirectory = new File(projectBuildDirectory, directoryName);
-		if (targetDirectory.exists()) {
-			try {
-				FileUtils.cleanDirectory(targetDirectory);
-			} catch (IOException e) {
-				throw new MojoExecutionException("Unable to clean old javascript directory - " + targetDirectory.toString(), e);
-			}
-		}
-		else if (!targetDirectory.mkdirs()) {
-			throw new MojoExecutionException("Unable to create javascript directory - " + targetDirectory.toString());
-		}
-		return targetDirectory;
-	}
-
 	protected void copyDependencyFiles(String scope, File targetDirectory) throws MojoExecutionException {
 		try {
 			javaScriptArtifactManager.unpack(project, "test", targetDirectory, false);
@@ -103,15 +111,19 @@ public abstract class AbstractJavaScriptMojo extends AbstractMojo {
 			getLog().info("No project javascript found at " + projectJavaScriptDirectory.toString());
 		}
 		else {
-			try {
-				FileUtils.copyDirectoryStructure(projectJavaScriptDirectory, targetDirectory);
-			} catch (IOException e) {
-				throw new MojoExecutionException("Failed to copy project javascript files", e);
-			}
-		}
+            copyDirectoryStructure(targetDirectory, projectJavaScriptDirectory);
+        }
 	}
 
-	protected void createJavaScriptArchive(String classifier, File sourceFile) throws MojoExecutionException {
+    protected void copyDirectoryStructure(File targetDirectory, File projectJavaScriptDirectory) throws MojoExecutionException {
+        try {
+            FileUtils.copyDirectoryStructure(projectJavaScriptDirectory, targetDirectory);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Failed to copy files", e);
+        }
+    }
+
+    protected void createJavaScriptArchive(String classifier, File sourceFile) throws MojoExecutionException {
 		createJavaScriptArchive(classifier, new File[] {sourceFile});
 	}
 
@@ -171,5 +183,44 @@ public abstract class AbstractJavaScriptMojo extends AbstractMojo {
 				throw new MojoExecutionException("Unable to delete old concatenated javascript file");
 			}
 		}
+	}
+
+	protected File getProjectDirectory(String directoryName) throws MojoExecutionException {
+		return new File(project.getBasedir(), directoryName);
+	}
+
+	protected File getTargetDirectory(String directoryName) throws MojoExecutionException {
+		return new File(projectBuildDirectory, directoryName);
+	}
+
+	protected File getCleanTargetDirectory(String directoryName) throws MojoExecutionException {
+		File targetDirectory = getTargetDirectory(directoryName);
+		if (targetDirectory.exists()) {
+			try {
+				FileUtils.cleanDirectory(targetDirectory);
+			} catch (IOException e) {
+				throw new MojoExecutionException("Unable to clean old javascript directory - " + targetDirectory.toString(), e);
+			}
+		}
+		else if (!targetDirectory.mkdirs()) {
+			throw new MojoExecutionException("Unable to create javascript directory - " + targetDirectory.toString());
+		}
+		return targetDirectory;
+	}
+
+	protected File getCleanTargetFile(String fileName) throws MojoExecutionException {
+		File targetFile = new File(projectBuildDirectory, fileName);
+		int maxRetries = 10;
+		while (targetFile.exists()) {
+			if (targetFile.delete() && maxRetries-- <= 0) {
+				throw new MojoExecutionException("Unable to delete old concatenated javascript file");
+			}
+		}
+		targetFile.getParentFile().mkdirs();
+		return targetFile;
+	}
+
+	public boolean javaScriptDirectoryExists() throws MojoExecutionException {
+		return getProjectDirectory(javaScriptDirectory).exists();
 	}
 }

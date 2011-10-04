@@ -36,6 +36,5 @@
 	<modules>
 		<module>JavaScriptMavenPlugin</module>
 		<module>DependencyManager</module>
-		<module>Packer</module>
 	</modules>
 </project>

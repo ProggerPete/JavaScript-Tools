@@ -23,7 +23,7 @@ public class TestCompileMojo extends AbstractJavaScriptMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Executing TestCompileMojo");
 
-		File javascriptTestDirectory = getTargetDirectory(testScriptsDirectory);
+		File javascriptTestDirectory = getCleanTargetDirectory(testScriptsDirectory);
 
 		getLog().info("Copy javascript dependency files to " + javascriptTestDirectory);
 		copyDependencyFiles("test", javascriptTestDirectory);

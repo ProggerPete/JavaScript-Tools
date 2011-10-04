@@ -43,8 +43,6 @@
 		</plugins>
 	</build>
 	<modules>
-		<module>webfilter</module>
-		<module>testweb</module>
 		<module>core</module>
 	</modules>
 </project>

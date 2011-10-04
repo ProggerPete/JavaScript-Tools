@@ -54,7 +54,7 @@ public class CombineDependenciesJavaScriptMojo extends AbstractJavaScriptMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Executing CombineJavaScriptMojo");
 
-		File combinedJavaScriptDirectory = getTargetDirectory("combined-javascript");
+		File combinedJavaScriptDirectory = getCleanTargetDirectory("combined-javascript");
 
 		getLog().info("Copy javascript dependency files to " + combinedJavaScriptDirectory);
 		copyDependencyFiles("runtime", combinedJavaScriptDirectory);

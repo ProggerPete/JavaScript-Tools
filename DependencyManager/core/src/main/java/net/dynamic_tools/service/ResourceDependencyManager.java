@@ -18,9 +18,11 @@ public interface ResourceDependencyManager<RESOURCE extends NamedResource> {
 
     public RESOURCE getResourceByName(String name);
 
-    public List<RESOURCE> getResourcesFor(String name);
+    public List<RESOURCE> getResourcesFor(String[] names);
 
     public List<RESOURCE> getResourcesFor(RESOURCE namedResource);
+
+    public List<RESOURCE> getResourcesFor(List<RESOURCE> namedResource);
 
 	public List<RESOURCE> getAllResources();
 
