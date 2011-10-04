@@ -67,7 +67,6 @@ public class ConcatenateJavaScriptMojo extends AbstractJavaScriptMojo {
 			jsDependencyInitialiser.setPaths(getTargetDirectory(javaScriptRunTimeDependencyDirectory + File.separator + "javascript"));
 		}
 
-
 		try {
 			jsDependencyInitialiser.initialiseDependencies();
 			JSResourceCombiner jsResourceCombiner = new JSResourceConcatenatingCombiner();

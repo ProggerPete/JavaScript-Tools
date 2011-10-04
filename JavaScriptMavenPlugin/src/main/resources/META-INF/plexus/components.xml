@@ -52,9 +52,8 @@
                 <phases>
                     <process-sources>net.dynamic_tools.javascript.maven:javascript-maven-plugin:extract-dependencies</process-sources>
                     <process-resources>org.apache.maven.plugins:maven-resources-plugin:resources</process-resources>
-                    <!--<package>org.apache.maven.plugins:maven-jar-plugin:jar</package>-->
-                    <!--<compile>net.dynamic_tools.maven:javascript-maven-plugin:compile</compile>-->
-                    <!--<test-compile>net.dynamic_tools.maven:javascript-maven-plugin:testCompile</test-compile>-->
+                    <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
+                    <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
                     <package>net.dynamic_tools.javascript.maven:javascript-maven-plugin:package</package>
                     <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                     <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
