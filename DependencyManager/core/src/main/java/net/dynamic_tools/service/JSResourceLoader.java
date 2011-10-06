@@ -24,25 +24,12 @@ public class JSResourceLoader {
 	JSDependencyReader jsDependencyReader;
 
 	public void loadResourcesFromPaths(ResourceDependencyManager<JSResource> resourceDependencyManager, File... paths) throws IOException {
+        Map<JSResource, Set<String>> dependencyMap = new HashMap<JSResource, Set<String>>();
 		for (File path : paths) {
-			loadResourcesFromPath(resourceDependencyManager, path);
-		}
-	}
-
-	private void loadResourcesFromPath(ResourceDependencyManager<JSResource> resourceDependencyManager, File path) throws IOException {
-		if (!path.isDirectory()) {
-			throw new IllegalArgumentException("path must be a directory");
-		}
-		List<File> jsFiles = fileFinder.getAllFilesWithExtension(path, ".js");
-		Map<JSResource, Set<String>> dependencyMap = new HashMap<JSResource, Set<String>>();
-		for (File jsFile : jsFiles) {
-			JSResource jsResource = new JSResource(jsFile, getNameFromLocation(path, jsFile));
-			resourceDependencyManager.addResource(jsResource);
-
-			dependencyMap.put(jsResource, jsDependencyReader.readDependencies(jsFile));
+			loadResourcesFromPath(resourceDependencyManager, path, dependencyMap);
 		}
 
-		for (JSResource jsResource : dependencyMap.keySet()) {
+        for (JSResource jsResource : dependencyMap.keySet()) {
 			Set<String> dependencies = dependencyMap.get(jsResource);
 			for (String dependencyName : dependencies) {
 				JSResource dependency = resourceDependencyManager.getResourceByName(dependencyName);
@@ -51,6 +38,19 @@ public class JSResourceLoader {
 				}
 				resourceDependencyManager.addDependency(jsResource, dependency);
 			}
+		}
+	}
+
+	private void loadResourcesFromPath(ResourceDependencyManager<JSResource> resourceDependencyManager, File path, Map<JSResource, Set<String>> dependencyMap) throws IOException {
+		if (!path.isDirectory()) {
+			throw new IllegalArgumentException("path must be a directory");
+		}
+		List<File> jsFiles = fileFinder.getAllFilesWithExtension(path, ".js");
+		for (File jsFile : jsFiles) {
+			JSResource jsResource = new JSResource(jsFile, getNameFromLocation(path, jsFile));
+			resourceDependencyManager.addResource(jsResource);
+
+			dependencyMap.put(jsResource, jsDependencyReader.readDependencies(jsFile));
 		}
 	}
 
