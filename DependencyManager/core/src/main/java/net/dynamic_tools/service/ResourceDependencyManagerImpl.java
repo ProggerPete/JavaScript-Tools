@@ -58,7 +58,17 @@ public class ResourceDependencyManagerImpl<RESOURCE extends NamedResource> imple
             this.addResource(dependency);
         }
 
-        dependencyGraph.addEdge(dependency, resource);
+        try {
+            dependencyGraph.addEdge(dependency, resource);
+        }
+        catch (IllegalArgumentException iae) {
+            if ("loops not allowed".equals(iae.getMessage())) {
+                throw new IllegalArgumentException("Circular dependencies are not allowed. Loop found between " + dependency.getName() + " and " + resource.getName());
+            }
+            else {
+                throw iae;
+            }
+        }
         globalDependencyListIsOutOfDate = true;
     }
 
