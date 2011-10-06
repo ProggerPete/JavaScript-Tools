@@ -27,15 +27,15 @@ import java.util.regex.Pattern;
 public class JSDependencyReader {
     Pattern pattern;
     CharsetDecoder charsetDecoder = Charset.forName("UTF-8").newDecoder();
+    private int groupNumber;
 
     public Set<String> readDependencies(File file) throws IOException, CharacterCodingException {
         Set<String> dependencySet = new HashSet<String>();
         CharBuffer charBuffer = readFileToCharBuffer(file);
 
-        // Run some matches
         Matcher matcher = pattern.matcher(charBuffer);
         while (matcher.find()) {
-            dependencySet.add(matcher.group(1));
+            dependencySet.add(matcher.group(groupNumber));
         }
 
         return dependencySet;
@@ -50,9 +50,12 @@ public class JSDependencyReader {
         return charsetDecoder.decode(byteBuffer);
     }
 
-
-
 	public void setPattern(String patternString) {
+        setPattern(patternString, 1);
+	}
+
+    public void setPattern(String patternString, int groupNumber) {
 		this.pattern = Pattern.compile(patternString, Pattern.MULTILINE);
+        this.groupNumber = groupNumber;
 	}
 }

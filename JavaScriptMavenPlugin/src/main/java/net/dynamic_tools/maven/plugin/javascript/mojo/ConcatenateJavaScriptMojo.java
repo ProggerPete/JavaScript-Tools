@@ -25,9 +25,16 @@ public class ConcatenateJavaScriptMojo extends AbstractJavaScriptMojo {
 	/**
 	 * Output concatenated javascript
 	 *
-	 * @parameter expression="${package.concatenate}" default-value="^\\s*\\*+\\s+@requires (\\S*)"
+	 * @parameter expression="${package.jsDependencyRegex}" default-value="^\\s*\\*+\\s+@requires (\\S*)"
 	 */
 	protected String jsDependencyRegex;
+
+	/**
+	 * Output concatenated javascript
+	 *
+	 * @parameter expression="${package.jsDependencyRegexGroupNumber}" default-value="1"
+	 */
+	protected int jsDependencyRegexGroupNumber;
 
 	/**
 	 * Output concatenated javascript
@@ -51,7 +58,7 @@ public class ConcatenateJavaScriptMojo extends AbstractJavaScriptMojo {
 		ResourceDependencyManager<JSResource> resourceDependencyManager = new ResourceDependencyManagerImpl<JSResource>();
 
 		JSDependencyReader jsDependencyReader = new JSDependencyReader();
-		jsDependencyReader.setPattern(jsDependencyRegex);
+		jsDependencyReader.setPattern(jsDependencyRegex, jsDependencyRegexGroupNumber);
 
 		JSResourceLoader jsResourceLoader = new JSResourceLoader();
 		jsResourceLoader.setFileFinder(new FileFinder());
