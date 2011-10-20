@@ -37,13 +37,6 @@
             </configuration>
         </component>
 
-
-        <!--<component>-->
-        <!--<role>org.codehaus.mojo.javascript.archive.JavaScriptArtifactManager</role>-->
-        <!--<role-hint>javascript</role-hint>-->
-        <!--<implementation>org.codehaus.mojo.javascript.archive.JavaScriptArtifactManager</implementation>-->
-        <!--<instantiation-strategy>per-lookup</instantiation-strategy>-->
-        <!--</component>-->
         <component>
             <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
             <role-hint>javascript</role-hint>
@@ -53,14 +46,16 @@
                     <process-sources>net.dynamic_tools.javascript.maven:javascript-maven-plugin:extract-dependencies</process-sources>
                     <process-resources>org.apache.maven.plugins:maven-resources-plugin:resources</process-resources>
                     <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
+                    <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
                     <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
+                    <integration-test>org.apache.maven.plugins:maven-failsafe-plugin:integration-test</integration-test>
+                    <verify>org.apache.maven.plugins:maven-failsafe-plugin:verify</verify>
                     <package>net.dynamic_tools.javascript.maven:javascript-maven-plugin:package</package>
                     <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                     <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                 </phases>
             </configuration>
         </component>
-
 
     </components>
 </component-set>
