@@ -34,7 +34,7 @@ public class NamedResource<DEPENDENCY_CLASS extends NamedResource> {
 
 	public void addDependency(DEPENDENCY_CLASS dependency) {
         if (dependency.isDependentOn(this)) {
-            throw new InvalidParameterException("Circular dependencies are not supported.");
+            throw new InvalidParameterException("Circular dependencies are not supported. Failed trying to add " + dependency.name + " as a dependency on " + name);
         }
         dependencies.add(dependency);
     }
