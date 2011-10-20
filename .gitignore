@@ -1,0 +1,9 @@
+#Ignore all IntelliJ Project files
+.idea
+*.iml
+
+#Ignore Maven Target directories
+/target
+/DependencyManager/core/target
+/DependencyManager/corenew/target
+/JavaScriptMavenPlugin/target
