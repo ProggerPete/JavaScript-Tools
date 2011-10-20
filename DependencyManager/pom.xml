@@ -44,5 +44,6 @@
 	</build>
 	<modules>
 		<module>core</module>
+		<module>corenew</module>
 	</modules>
 </project>
