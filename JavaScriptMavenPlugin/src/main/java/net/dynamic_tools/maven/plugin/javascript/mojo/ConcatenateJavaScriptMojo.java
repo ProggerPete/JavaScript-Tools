@@ -1,5 +1,6 @@
 package net.dynamic_tools.maven.plugin.javascript.mojo;
 
+import net.dynamic_tools.exception.CircularDependencyException;
 import net.dynamic_tools.exception.UnableToWriteJSResourcesException;
 import net.dynamic_tools.model.JSResource;
 import net.dynamic_tools.service.*;
@@ -55,38 +56,34 @@ public class ConcatenateJavaScriptMojo extends AbstractJavaScriptMojo {
 
 		File concatenatedJavaScriptFile = getCleanTargetFile(concatenatedFileName);
 
-		ResourceDependencyManager<JSResource> resourceDependencyManager = new ResourceDependencyManagerImpl<JSResource>();
+		JSResourceDependencyManagerImpl jsResourceDependencyManager = new JSResourceDependencyManagerImpl();
 
 		JSDependencyReader jsDependencyReader = new JSDependencyReader();
 		jsDependencyReader.setPattern(jsDependencyRegex, jsDependencyRegexGroupNumber);
 
-		JSResourceLoader jsResourceLoader = new JSResourceLoader();
-		jsResourceLoader.setFileFinder(new FileFinder());
-		jsResourceLoader.setJsDependencyReader(jsDependencyReader);
+        jsResourceDependencyManager.setJsDependencyReader(jsDependencyReader);
+        jsResourceDependencyManager.setFileFinder(new FileFinder());
 
-		JSDependencyInitialiser jsDependencyInitialiser = new JSDependencyInitialiser();
-		jsDependencyInitialiser.setJsResourceLoader(jsResourceLoader);
-		jsDependencyInitialiser.setResourceDependencyManager(resourceDependencyManager);
 		if (javaScriptDirectoryExists()) {
-			jsDependencyInitialiser.setPaths(getProjectDirectory(javaScriptDirectory), getTargetDirectory(javaScriptRunTimeDependencyDirectory + File.pathSeparator + "javascript"));
+			jsResourceDependencyManager.addPaths(getProjectDirectory(javaScriptDirectory));
 		}
-		else {
-			jsDependencyInitialiser.setPaths(getTargetDirectory(javaScriptRunTimeDependencyDirectory + File.separator + "javascript"));
-		}
+
+        jsResourceDependencyManager.addPaths(getTargetDirectory(javaScriptRunTimeDependencyDirectory + File.separator + "javascript"));
 
 		try {
-			jsDependencyInitialiser.initialiseDependencies();
 			JSResourceCombiner jsResourceCombiner = new JSResourceConcatenatingCombiner();
-			List<JSResource> resources = resourceDependencyManager.getResourcesFor(getProjectResources(resourceDependencyManager.getAllResources()));
+			List<JSResource> resources = jsResourceDependencyManager.getResourcesFor(getProjectResources(jsResourceDependencyManager.getAllResources()));
 			getLog().info("Writing concatenated javascript to " + concatenatedJavaScriptFile);
 			jsResourceCombiner.writeJSResourcesToOutputStream(resources, new FileOutputStream(concatenatedJavaScriptFile));
 		} catch (IOException e) {
 			throw new MojoExecutionException("Unable to create concatenated javascript artifact", e);
 		} catch (UnableToWriteJSResourcesException e) {
 			throw new MojoExecutionException("Unable to create concatenated javascript artifact", e);
-		}
+		} catch (CircularDependencyException e) {
+            throw new MojoExecutionException("Unable to create concatenated javascript artifact", e);
+        }
 
-		getLog().info("Finished ConcatenateJavaScriptMojo");
+        getLog().info("Finished ConcatenateJavaScriptMojo");
 	}
 
 	private List<JSResource> getProjectResources(List<JSResource> allResources) {
