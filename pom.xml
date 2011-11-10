@@ -4,16 +4,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-		<artifactId>oss-parent</artifactId>
-		<groupId>org.sonatype.oss</groupId>
-		<version>7</version>
-	</parent>
+        <artifactId>oss-parent</artifactId>
+        <groupId>org.sonatype.oss</groupId>
+        <version>7</version>
+    </parent>
 
     <groupId>net.dynamic-tools</groupId>
     <artifactId>javascript</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>JavaScript Tools</name>
+
+    <scm>
+        <connection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</connection>
+        <url>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</url>
+        <developerConnection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</developerConnection>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,26 +48,4 @@
         <module>JavaScriptMavenPlugin</module>
         <module>DependencyManager</module>
     </modules>
-
-    <scm>
-        <connection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</connection>
-        <url>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</url>
-        <developerConnection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</developerConnection>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Nexus Staging Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Snapshots</name>
-            <url>
-                https://oss.sonatype.org/content/repositories/snapshots
-            </url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
