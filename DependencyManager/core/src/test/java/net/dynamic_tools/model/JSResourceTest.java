@@ -1,11 +1,9 @@
 package net.dynamic_tools.model;
 
+import net.dynamic_tools.exception.CircularDependencyException;
 import org.junit.Test;
 
 import java.io.File;
-import java.security.InvalidParameterException;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,8 +48,8 @@ public class JSResourceTest {
 //        assertTrue(jsResourceThree.compareTo(jsResourceOne) < 0);
 //    }
 
-    @Test(expected=InvalidParameterException.class)
-    public void circularDependenciesAreProhibited() {
+    @Test(expected=CircularDependencyException.class)
+    public void circularDependenciesAreProhibited() throws CircularDependencyException {
         JSResource jsResourceOne = new JSResource(dummyFile, "resource1");
         JSResource jsResourceTwo = new JSResource(dummyFile, "resource2");
 

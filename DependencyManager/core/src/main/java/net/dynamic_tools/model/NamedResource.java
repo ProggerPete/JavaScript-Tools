@@ -1,6 +1,7 @@
 package net.dynamic_tools.model;
 
-import java.security.InvalidParameterException;
+import net.dynamic_tools.exception.CircularDependencyException;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,9 +12,9 @@ import java.util.Set;
  * Time: 4:32 PM
  * To change this template use File | Settings | File Templates.
  */
-public class NamedResource<DEPENDENCY_CLASS extends NamedResource> {
+public abstract class NamedResource<K extends NamedResource> implements Comparable<K> {
     private String name;
-	protected final Set<DEPENDENCY_CLASS> dependencies = new HashSet<DEPENDENCY_CLASS>();
+	protected final Set<K> dependencies = new HashSet<K>();
 
     public NamedResource(String name) {
         this.name = name;
@@ -23,8 +24,8 @@ public class NamedResource<DEPENDENCY_CLASS extends NamedResource> {
         return name;
     }
 
-	public boolean isDependentOn(DEPENDENCY_CLASS resource) {
-        for (DEPENDENCY_CLASS dependency : dependencies) {
+	public boolean isDependentOn(K resource) {
+        for (NamedResource dependency : dependencies) {
             if (dependency.equals(resource) || dependency.isDependentOn(resource)) {
                 return true;
             }
@@ -32,15 +33,19 @@ public class NamedResource<DEPENDENCY_CLASS extends NamedResource> {
         return false;
     }
 
-	public void addDependency(DEPENDENCY_CLASS dependency) {
-        if (dependency.isDependentOn(this)) {
-            throw new InvalidParameterException("Circular dependencies are not supported. Failed trying to add " + dependency.name + " as a dependency on " + name);
+	public void addDependency(K dependency) throws CircularDependencyException {
+        if (dependency.isDependentOn(this) || dependency.equals(this)) {
+            throw new CircularDependencyException("Circular dependencies are not supported. Failed trying to add " + dependency.name + " as a dependency on " + name);
         }
         dependencies.add(dependency);
     }
 
-	public Set<DEPENDENCY_CLASS> getDependencies() {
-        return new HashSet<DEPENDENCY_CLASS>(dependencies);
+	public Set<K> getDependencies() {
+        return new HashSet<K>(dependencies);
+    }
+
+    public void removeDependency(K dependency) {
+        dependencies.remove(dependency);
     }
 
     @Override
@@ -51,5 +56,16 @@ public class NamedResource<DEPENDENCY_CLASS extends NamedResource> {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public int compareTo(K namedResource) {
+        if (namedResource.isDependentOn(this)) {
+            return 1;
+        }
+        if (this.isDependentOn(namedResource)) {
+            return -1;
+        }
+        return this.name.compareTo(namedResource.name);
     }
 }

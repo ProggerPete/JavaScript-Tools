@@ -1,7 +1,9 @@
 package net.dynamic_tools.service;
 
-import net.dynamic_tools.model.NamedResource;
+import net.dynamic_tools.exception.CircularDependencyException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -11,22 +13,22 @@ import java.util.List;
  * Time: 4:12 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ResourceDependencyManager<RESOURCE extends NamedResource> {
-    public void addResource(RESOURCE namedResource);
+public interface ResourceDependencyManager<NamedResource> {
+    public void addPaths(File... paths);
 
-    public void addDependency(RESOURCE namedResource, RESOURCE dependency);
+    public void removePaths(File... paths);
 
-    public RESOURCE getResourceByName(String name);
+    public void addMockPaths(File... paths);
 
-    public List<RESOURCE> getResourcesFor(String[] names);
+    public void removeMockPaths(File... paths);
 
-    public List<RESOURCE> getResourcesFor(RESOURCE namedResource);
+    public List<NamedResource> getResourcesFor(String... names) throws IOException, CircularDependencyException;
 
-    public List<RESOURCE> getResourcesFor(List<RESOURCE> namedResource);
+    public List<NamedResource> getResourcesFor(NamedResource... namedResources);
 
-	public List<RESOURCE> getAllResources();
+    public List<NamedResource> getTestResourcesFor(String... names) throws IOException, CircularDependencyException;
 
-    public boolean contains(String name);
+	public List<NamedResource> getAllResources() throws IOException, CircularDependencyException;
 
-    public boolean contains(RESOURCE namedResource);
+    public boolean contains(String name) throws IOException, CircularDependencyException;
 }

@@ -17,7 +17,7 @@ public class JSResource extends NamedResource<JSResource> {
     public JSResource(File jsResourceFile, String fullName) {
         super(fullName);
         if (fullName == null || jsResourceFile == null) {
-            throw new InvalidParameterException("You must specify the full name and file for the resource.");
+            throw new InvalidParameterException("You must specify the full name and file for the resource. jsResourceFile was " + jsResourceFile + " and fullName was " + fullName);
         }
         this.jsResourceFile = jsResourceFile;
     }

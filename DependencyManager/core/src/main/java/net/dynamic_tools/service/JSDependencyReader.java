@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.HashSet;
@@ -29,7 +28,7 @@ public class JSDependencyReader {
     CharsetDecoder charsetDecoder = Charset.forName("UTF-8").newDecoder();
     private int groupNumber;
 
-    public Set<String> readDependencies(File file) throws IOException, CharacterCodingException {
+    public Set<String> readDependencies(File file) throws IOException {
         Set<String> dependencySet = new HashSet<String>();
         CharBuffer charBuffer = readFileToCharBuffer(file);
 

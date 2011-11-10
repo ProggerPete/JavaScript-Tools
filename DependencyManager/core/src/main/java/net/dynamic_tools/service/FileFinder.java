@@ -2,12 +2,9 @@ package net.dynamic_tools.service;
 
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +15,16 @@ import java.util.regex.Pattern;
  */
 @Component
 public class FileFinder {
+    public File getFile(String fileName, List<File> rootPaths) {
+        for (File rootPath : rootPaths) {
+            File resourceFile = new File(rootPath, fileName);
+            if (resourceFile.exists()) {
+                return resourceFile;
+            }
+        }
+        return null;
+    }
+
     public List<File> getAllFilesWithExtension(File root, String extension) {
         List<File> fileList = new ArrayList<File>();
         addFiles(fileList, root, extension);
