@@ -4,6 +4,6 @@
 
 #Ignore Maven Target directories
 /target
+/DependencyManager/target
 /DependencyManager/core/target
-/DependencyManager/corenew/target
 /JavaScriptMavenPlugin/target
