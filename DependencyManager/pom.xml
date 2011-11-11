@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>net.dynamic-tools</groupId>
 		<artifactId>javascript</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 
 	<groupId>net.dynamic-tools.javascript</groupId>
 	<artifactId>dependencymanager</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>pom</packaging>
 	<name>Dependency Manager</name>
 
