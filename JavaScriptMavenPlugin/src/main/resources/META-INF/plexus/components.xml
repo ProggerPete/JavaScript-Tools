@@ -13,7 +13,7 @@
             <instantiation-strategy>per-lookup</instantiation-strategy>
         </component>
         <component>
-            <role>net.dynamic-tools.maven.plugin.javascript.util.JavaScriptArtifactManager</role>
+            <role>net.dynamic_tools.maven.plugin.javascript.util.JavaScriptArtifactManager</role>
             <role-hint>javascript</role-hint>
             <implementation>net.dynamic_tools.maven.plugin.javascript.util.JavaScriptArtifactManager</implementation>
             <instantiation-strategy>per-lookup</instantiation-strategy>
