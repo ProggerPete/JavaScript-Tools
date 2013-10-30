@@ -35,7 +35,7 @@ public abstract class NamedResource<K extends NamedResource> implements Comparab
 
 	public void addDependency(K dependency) throws CircularDependencyException {
         if (dependency.isDependentOn(this) || dependency.equals(this)) {
-            throw new CircularDependencyException("Circular dependencies are not supported. Failed trying to add " + dependency.name + " as a dependency on " + name);
+            throw new CircularDependencyException("Circular dependencies are not supported. Failed trying to add " + dependency.getName() + " as a dependency on " + name);
         }
         dependencies.add(dependency);
     }
@@ -66,6 +66,6 @@ public abstract class NamedResource<K extends NamedResource> implements Comparab
         if (this.isDependentOn(namedResource)) {
             return -1;
         }
-        return this.name.compareTo(namedResource.name);
+        return this.name.compareTo(namedResource.getName());
     }
 }
