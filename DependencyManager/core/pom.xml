@@ -3,7 +3,7 @@
     <parent>
         <groupId>net.dynamic-tools.javascript</groupId>
         <artifactId>dependencymanager</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
     <groupId>net.dynamic-tools.javascript.dependencymanager</groupId>
