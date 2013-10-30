@@ -87,6 +87,15 @@ public class JSResourceDependencyManagerImpl implements ResourceDependencyManage
 
                 File jsResourceFile = fileFinder.getFile(fileName, paths);
 
+                if (jsResourceFile == null) {
+                    List<File> attemptedPaths = new ArrayList<File>();
+                    for (File path : paths) {
+                        attemptedPaths.add(new File(path, fileName));
+                    }
+
+                    throw new RuntimeException("Unable to find resource with name : " + name + ". Locations searched : " + attemptedPaths);
+                }
+
                 jsResource = new JSResource(jsResourceFile, name);
 
                 jsResourceMap.put(name, jsResource);
