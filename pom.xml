@@ -10,7 +10,7 @@
 
 	<groupId>net.dynamic-tools</groupId>
 	<artifactId>javascript</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<packaging>pom</packaging>
 	<name>JavaScript Tools</name>
 
@@ -18,7 +18,8 @@
 		<connection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</connection>
 		<url>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</url>
 		<developerConnection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</developerConnection>
-	</scm>
+	  <tag>javascript-1.0.2</tag>
+  </scm>
 
 	<modules>
 		<module>JavaScriptMavenPlugin</module>
