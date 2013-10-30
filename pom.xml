@@ -18,7 +18,6 @@
 		<connection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</connection>
 		<url>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</url>
 		<developerConnection>scm:git:git@github.com:ProggerPete/JavaScript-Tools.git</developerConnection>
-		<tag>HEAD</tag>
 	</scm>
 
 	<modules>
